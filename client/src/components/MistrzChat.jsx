@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { API_BASE } from "../api";
 
 /**
  * Chat UI for Mistrz. Sends message + context + locale; streams reply via SSE.
@@ -25,7 +26,7 @@ export function MistrzChat({ context, disabled }) {
 
     const locale = i18n.language?.startsWith("en") ? "en" : "pl";
     try {
-      const res = await fetch("/api/mistrz", {
+      const res = await fetch(API_BASE + "/mistrz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg, context, locale }),

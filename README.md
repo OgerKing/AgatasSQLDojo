@@ -12,6 +12,23 @@ See [.cursor/TECHNICAL_SPEC.md](.cursor/TECHNICAL_SPEC.md) and [.cursor/BUILD_PL
 
 ## Run locally
 
+**One-command startup (recommended):**
+
+```bash
+# Bash (Linux, macOS, Git Bash on Windows)
+chmod +x scripts/start-dev.sh
+./scripts/start-dev.sh
+```
+
+```powershell
+# PowerShell (Windows)
+.\scripts\start-dev.ps1
+```
+
+The script, in order: starts Postgres (Docker), waits for it, ensures `server/.env` exists, installs dependencies, starts the API in the background, then starts the Vite client. Open http://localhost:5173 when it’s ready.
+
+**Manual steps (if you prefer):**
+
 1. **Postgres:** Start Postgres (e.g. `docker compose up -d postgres` or local Postgres). Create DB `cech` and user if needed; or use:
    ```bash
    docker compose up -d postgres
@@ -24,13 +41,13 @@ Open the client URL (e.g. http://localhost:5173). You should see "Cech" and a li
 
 **Mistrz (LLM tutor):** Set `OPENAI_API_KEY` in `server/.env` to enable "Zapytaj Mistrza" on each zadanie. Optional: `OPENAI_MODEL=gpt-4o-mini` (default) or another model.
 
-## Run with Docker (API + Postgres)
+## Run with Docker (API + client + Postgres)
 
 ```bash
 docker compose up --build
 ```
 
-Server at http://localhost:3001; run client separately with `npm run dev` in `client/` for frontend dev.
+One image serves both the **API and the built client**. Open **http://localhost:3001** in your browser (no separate `npm run dev` for the client). Postgres runs in a separate container; the app runs migrations on first start.
 
 ## Deployment (Phase 5)
 

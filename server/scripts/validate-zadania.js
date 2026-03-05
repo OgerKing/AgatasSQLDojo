@@ -44,7 +44,8 @@ function main() {
       console.error(`Zadanie ${i + 1} (id=${z.id}) needs schema_ddl or schema_key`);
       ok = false;
     }
-    if (!z.seed_sql && !z.schema_key) {
+    if (z.schema_key) continue;
+    if (z.seed_sql === undefined) {
       console.error(`Zadanie ${i + 1} (id=${z.id}) needs seed_sql or schema_key`);
       ok = false;
     }

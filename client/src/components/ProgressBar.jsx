@@ -1,25 +1,39 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { apiFetch } from "../api";
+import { apiFetch, API_BASE } from "../api";
+
+const FALLBACK_STOPIEN = { uczen: "Uczeń", czeladnik: "Czeladnik", mistrz: "Mistrz" };
 
 export function ProgressBar({ totalZadania: totalProp }) {
   const { t } = useTranslation();
   const [progress, setProgress] = useState(null);
+  const [themeConfig, setThemeConfig] = useState(null);
   const [totalZadania, setTotalZadania] = useState(totalProp ?? 0);
-  const STOPIEN_LABEL = {
-    uczen: t("progress.stopienUczen"),
-    czeladnik: t("progress.stopienCzeladnik"),
-    mistrz: t("progress.stopienMistrz"),
-  };
   const ACHIEVEMENT_LABELS = {
     "pierwsze-zadanie": t("progress.achievementFirst"),
     "seria-3": t("progress.achievementStreak3"),
   };
 
-  useEffect(() => {
-    apiFetch("/api/progress")
+  const refetchProgress = () => {
+    apiFetch(API_BASE + "/progress")
       .then((r) => (r.ok ? r.json() : null))
       .then(setProgress);
+  };
+
+  useEffect(() => {
+    refetchProgress();
+  }, []);
+
+  useEffect(() => {
+    fetch(API_BASE + "/themes")
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setThemeConfig);
+  }, []);
+
+  useEffect(() => {
+    const onThemeChanged = () => refetchProgress();
+    window.addEventListener("theme-changed", onThemeChanged);
+    return () => window.removeEventListener("theme-changed", onThemeChanged);
   }, []);
 
   useEffect(() => {
@@ -35,9 +49,10 @@ export function ProgressBar({ totalZadania: totalProp }) {
   if (!progress) return null;
 
   const total = totalZadania || 1;
-
+  const theme = progress.preferred_theme || "polonia";
+  const rankLabels = themeConfig?.[theme]?.rankLabels || FALLBACK_STOPIEN;
   const completed = progress.completed_zadania?.length ?? 0;
-  const stopienLabel = STOPIEN_LABEL[progress.current_stopien] || progress.current_stopien;
+  const stopienLabel = rankLabels[progress.current_stopien] || progress.current_stopien;
 
   return (
     <aside className="progress-bar" aria-label={t("progress.ariaSummary")}>

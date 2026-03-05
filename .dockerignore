@@ -1,0 +1,9 @@
+# Dependencies and build artifacts
+node_modules
+client/node_modules
+server/node_modules
+client/dist
+.git
+.env
+*.log
+.cursor

@@ -26,7 +26,12 @@
   },
   "zadania": {
     "title": "Zadania",
-    "loading": "Ładowanie…"
+    "loading": "Ładowanie…",
+    "themeHint": "Motyw zadań:",
+    "themeHintHeader": "wybierz w nagłówku."
+  },
+  "theme": {
+    "ariaLabel": "Wybierz motyw (Polonia, Szkoła czarów, Dwaj chłopcy i Bernardyn)"
   },
   "zadanie": {
     "goal": "Cel",
@@ -40,8 +45,8 @@
     "rowsReturned": "Zwrócono {{count}} wierszy",
     "nextTask": "Następne zadanie →",
     "chooseTask": "Wybierz zadanie",
-    "correct": "Dobrze! Poprawny wynik.",
-    "firstCorrect": "Jesteś Uczeń! Poprawny wynik."
+    "correct": "Dobrze! Zgadza się.",
+    "firstCorrect": "Jesteś Uczniem! Dobrze, zgadza się."
   },
   "errors": {
     "forbidden": "Brak dostępu.",

@@ -1,5 +1,8 @@
 const TOKEN_KEY = "cech_token";
 
+/** API base path; use v1 for versioned contract. @see TECHNICAL_SPEC §5 */
+export const API_BASE = "/api/v1";
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -9,11 +12,16 @@ export function setToken(token) {
   else localStorage.removeItem(TOKEN_KEY);
 }
 
+function toApiUrl(url) {
+  if (url.startsWith(API_BASE) || url.startsWith("http")) return url;
+  return url.replace(/^\/api\//, API_BASE + "/");
+}
+
 export function apiFetch(url, options = {}) {
   const token = getToken();
   const headers = { ...options.headers };
   if (token) headers.Authorization = `Bearer ${token}`;
-  return fetch(url, { ...options, headers });
+  return fetch(toApiUrl(url), { ...options, headers });
 }
 
 export function isLoggedIn() {
@@ -33,7 +41,7 @@ export function getStoredUser() {
 }
 
 export function getTeacherStudents() {
-  return apiFetch("/api/teacher/students").then((r) => {
+  return apiFetch(API_BASE + "/teacher/students").then((r) => {
     if (!r.ok) throw new Error("Forbidden or error");
     return r.json();
   });

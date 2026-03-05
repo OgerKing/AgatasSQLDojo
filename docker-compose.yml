@@ -14,7 +14,7 @@ services:
 
   server:
     build:
-      context: ./server
+      context: .
       dockerfile: Dockerfile
     image: agatas-sql-dojo-server
     container_name: cech-node-api

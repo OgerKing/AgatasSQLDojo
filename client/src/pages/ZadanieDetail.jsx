@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { apiFetch, isLoggedIn } from "../api";
+import { apiFetch, isLoggedIn, API_BASE } from "../api";
 import { MistrzChat } from "../components/MistrzChat";
 import { ProgressBar } from "../components/ProgressBar";
 
@@ -20,7 +20,7 @@ export function ZadanieDetail() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/zadania/${id}`)
+    fetch(API_BASE + `/zadania/${id}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("Not found"))))
       .then((data) => {
         if (!cancelled) setZadanie(data);
@@ -41,7 +41,7 @@ export function ZadanieDetail() {
     setAttemptCount((c) => c + 1);
     const locale = i18n.language?.startsWith("en") ? "en" : "pl";
     try {
-      const res = await fetch("/api/run-sql", {
+      const res = await fetch(API_BASE + "/run-sql", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ zadanie_id: id, query, locale }),

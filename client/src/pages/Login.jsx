@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { setToken } from "../api";
+import { setToken, API_BASE } from "../api";
 
 export function Login() {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ export function Login() {
     e.preventDefault();
     setError("");
     setLoading(true);
-    fetch("/api/auth/login", {
+    fetch(API_BASE + "/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, role }),

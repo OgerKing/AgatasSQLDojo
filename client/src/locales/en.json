@@ -26,7 +26,12 @@
   },
   "zadania": {
     "title": "Tasks",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "themeHint": "Task theme:",
+    "themeHintHeader": "choose in header."
+  },
+  "theme": {
+    "ariaLabel": "Choose theme (Polonia, Wizards school, Two boys and St Bernard)"
   },
   "zadanie": {
     "goal": "Goal",

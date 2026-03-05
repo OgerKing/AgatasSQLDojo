@@ -10,6 +10,7 @@
     "build:client": "cd client && npm run build",
     "start:server": "cd server && npm start",
     "postinstall": "cd server && npm install && cd ../client && npm install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "verify-lessons": "node server/scripts/verify-zadania-solvable.js"
   }
 }

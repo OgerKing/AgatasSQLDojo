@@ -1,92 +1,44 @@
 /**
- * Zadania content (Polonia theme). One zadanie per concept; schema + seed for SQLite sandbox.
- * @see TECHNICAL_SPEC §4, BUILD_PLAN Phase 1
+ * Zadania content: Polonia (full) + Wizards and Urban_mom (minimal). Merged from batch files.
+ * @see TECHNICAL_SPEC §4, §12
  */
 
-export const ZADANIA = [
-  {
-    id: "podstawy-select",
-    theme: "polonia",
-    title: "Wszystkie wydarzenia",
-    goal: "Pokaż wszystkie wydarzenia z tabeli wydarzenia (użyj SELECT).",
-    concept: "SELECT",
-    stopien: "uczen",
-    reference: "https://www.sqlite.org/lang_select.html",
-    schema_ddl: `CREATE TABLE wydarzenia (
-  id INTEGER PRIMARY KEY,
-  nazwa TEXT NOT NULL,
-  data_wydarzenia DATE,
-  miejsce TEXT
-);`,
-    seed_sql: `INSERT INTO wydarzenia (id, nazwa, data_wydarzenia, miejsce) VALUES
-(1, 'Dożynki', '2025-09-14', 'Park miejski'),
-(2, 'Spotkanie cechu', '2025-10-01', 'Dom parafialny'),
-(3, 'Kiermasz świąteczny', '2025-12-07', 'Rynek');`,
-    expected_result: [
-      { id: 1, nazwa: "Dożynki", data_wydarzenia: "2025-09-14", miejsce: "Park miejski" },
-      { id: 2, nazwa: "Spotkanie cechu", data_wydarzenia: "2025-10-01", miejsce: "Dom parafialny" },
-      { id: 3, nazwa: "Kiermasz świąteczny", data_wydarzenia: "2025-12-07", miejsce: "Rynek" },
-    ],
-    version: 1,
-  },
-  {
-    id: "where-miejsce",
-    theme: "polonia",
-    title: "Wydarzenia w jednym miejscu",
-    goal: "Pokaż tylko wydarzenia, których miejsce to 'Rynek' (użyj WHERE).",
-    concept: "WHERE",
-    stopien: "uczen",
-    reference: "https://www.sqlite.org/lang_expr.html",
-    schema_ddl: `CREATE TABLE wydarzenia (
-  id INTEGER PRIMARY KEY,
-  nazwa TEXT NOT NULL,
-  data_wydarzenia DATE,
-  miejsce TEXT
-);`,
-    seed_sql: `INSERT INTO wydarzenia (id, nazwa, data_wydarzenia, miejsce) VALUES
-(1, 'Dożynki', '2025-09-14', 'Park miejski'),
-(2, 'Spotkanie cechu', '2025-10-01', 'Dom parafialny'),
-(3, 'Kiermasz świąteczny', '2025-12-07', 'Rynek');`,
-    expected_result: [
-      { id: 3, nazwa: "Kiermasz świąteczny", data_wydarzenia: "2025-12-07", miejsce: "Rynek" },
-    ],
-    version: 1,
-  },
-  {
-    id: "order-by-data",
-    theme: "polonia",
-    title: "Wydarzenia od najbliższego",
-    goal: "Pokaż wszystkie wydarzenia posortowane po dacie rosnąco (najbliższe pierwsze). Użyj ORDER BY.",
-    concept: "ORDER BY",
-    stopien: "uczen",
-    reference: "https://www.sqlite.org/lang_select.html",
-    schema_ddl: `CREATE TABLE wydarzenia (
-  id INTEGER PRIMARY KEY,
-  nazwa TEXT NOT NULL,
-  data_wydarzenia DATE,
-  miejsce TEXT
-);`,
-    seed_sql: `INSERT INTO wydarzenia (id, nazwa, data_wydarzenia, miejsce) VALUES
-(1, 'Dożynki', '2025-09-14', 'Park miejski'),
-(2, 'Spotkanie cechu', '2025-10-01', 'Dom parafialny'),
-(3, 'Kiermasz świąteczny', '2025-12-07', 'Rynek');`,
-    expected_result: [
-      { id: 1, nazwa: "Dożynki", data_wydarzenia: "2025-09-14", miejsce: "Park miejski" },
-      { id: 2, nazwa: "Spotkanie cechu", data_wydarzenia: "2025-10-01", miejsce: "Dom parafialny" },
-      { id: 3, nazwa: "Kiermasz świąteczny", data_wydarzenia: "2025-12-07", miejsce: "Rynek" },
-    ],
-    version: 1,
-  },
-];
+import { ZADANIA as B1 } from "./content/batch-1.js";
+import { ZADANIA as B2 } from "./content/batch-2.js";
+import { ZADANIA as B3 } from "./content/batch-3.js";
+import { ZADANIA as B4 } from "./content/batch-4.js";
+import { ZADANIA as B5 } from "./content/batch-5.js";
+import { ZADANIA as B6 } from "./content/batch-6.js";
+import { ZADANIA as Wizards } from "./content/wizards.js";
+import { ZADANIA as UrbanMom } from "./content/urban_mom.js";
+
+export const ZADANIA = [...B1, ...B2, ...B3, ...B4, ...B5, ...B6, ...Wizards, ...UrbanMom];
+
+const STOPIEN_ORDER = { uczen: 1, czeladnik: 2, mistrz: 3 };
 
 export function getZadanieById(id) {
   return ZADANIA.find((z) => z.id === id) ?? null;
 }
 
+/** Highest stopień from a list of zadanie ids (uczen < czeladnik < mistrz). */
+export function getHighestStopien(zadanieIds) {
+  let max = 0;
+  for (const id of zadanieIds || []) {
+    const z = getZadanieById(id);
+    if (z?.stopien && STOPIEN_ORDER[z.stopien] > max) {
+      max = STOPIEN_ORDER[z.stopien];
+    }
+  }
+  const entry = Object.entries(STOPIEN_ORDER).find(([, v]) => v === max);
+  return entry ? entry[0] : "uczen";
+}
+
 /** @param {string[]} completedIds - optional; if provided, each zadanie gets completed and unlocked. */
-export function listZadania(completedIds = []) {
-  const ids = ZADANIA.map((z) => z.id);
-  return ZADANIA.map((z, i) => ({
+/** @param {string} [theme] - optional; filter by theme (polonia | wizards | urban_mom). */
+export function listZadania(completedIds = [], theme) {
+  const list = theme ? ZADANIA.filter((z) => z.theme === theme) : ZADANIA;
+  const ids = list.map((z) => z.id);
+  return list.map((z, i) => ({
     id: z.id,
     theme: z.theme,
     title: z.title,
@@ -97,3 +49,7 @@ export function listZadania(completedIds = []) {
     unlocked: i === 0 || completedIds.includes(ids[i - 1]),
   }));
 }
+
+import { THEME_IDS } from "./themes.js";
+/** All supported themes. @see TECHNICAL_SPEC §12 */
+export const THEMES = THEME_IDS;

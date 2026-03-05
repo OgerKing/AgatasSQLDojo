@@ -15,7 +15,7 @@
 import Database from "better-sqlite3";
 
 const MAX_QUERY_LENGTH = 10_000;
-const ALLOWED_PREFIXES = ["SELECT"]; // read-only (SELECT, optionally with WHERE/ORDER BY)
+const ALLOWED_PREFIXES = ["SELECT", "WITH"]; // read-only (SELECT; WITH for CTE lessons)
 
 /**
  * Map SQLite error message to learner-friendly text. Supports pl / en.

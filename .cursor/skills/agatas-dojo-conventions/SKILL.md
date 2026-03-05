@@ -36,7 +36,7 @@ Until then, keep backend/frontend choices consistent with existing code in the r
 - **Product vision:** [.cursor/PRODUCT_VISION.md](.cursor/PRODUCT_VISION.md) – north star for the product; refer when making product or UX decisions.
 - **Technical specification:** [.cursor/TECHNICAL_SPEC.md](.cursor/TECHNICAL_SPEC.md) – stack, architecture, data models, APIs; refer when implementing.
 - **Build plan:** [.cursor/BUILD_PLAN.md](.cursor/BUILD_PLAN.md) – phased milestones, dependencies, acceptance criteria; refer when planning or implementing features.
-- **.cursor/skills/** – Project skills: sql-teaching-progression, llm-tutor-chat, gamification-learning, motivation-psychology, senior-software-architect, expert-sql-engineer, enterprise-technical-pm, gamified-training-software, native-polish-speaker, this file. Do not remove or rename without updating references.
+- **.cursor/skills/** – Project skills: sql-teaching-progression, llm-tutor-chat, sql-test-lessons, gamification-learning, motivation-psychology, senior-software-architect, expert-sql-engineer, enterprise-technical-pm, gamified-training-software, native-polish-speaker, this file. Do not remove or rename without updating references.
 - Prefer a flat or shallow folder structure for app code; group by feature or by layer (e.g. `api/`, `components/`, `zadania/`).
 
 ## Naming
