@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { apiFetch, API_BASE } from "../api";
 
 const FALLBACK_STOPIEN = { uczen: "Uczeń", czeladnik: "Czeladnik", mistrz: "Mistrz" };
+const XP_PER_LEVEL = 100;
 
 export function ProgressBar({ totalZadania: totalProp }) {
   const { t } = useTranslation();
@@ -53,6 +54,11 @@ export function ProgressBar({ totalZadania: totalProp }) {
   const rankLabels = themeConfig?.[theme]?.rankLabels || FALLBACK_STOPIEN;
   const completed = progress.completed_zadania?.length ?? 0;
   const stopienLabel = rankLabels[progress.current_stopien] || progress.current_stopien;
+  const xp = progress.xp ?? 0;
+  const level = Math.floor(xp / XP_PER_LEVEL) + 1;
+  const xpIntoLevel = xp % XP_PER_LEVEL;
+  const xpToNextLevel = XP_PER_LEVEL - xpIntoLevel;
+  const xpPercent = Math.max(0, Math.min(100, (xpIntoLevel / XP_PER_LEVEL) * 100));
 
   return (
     <aside className="progress-bar" aria-label={t("progress.ariaSummary")}>
@@ -62,7 +68,23 @@ export function ProgressBar({ totalZadania: totalProp }) {
         </span>
         <span className="progress-stopien">({stopienLabel})</span>
       </div>
-      <div className="progress-xp">{t("progress.xp")}: {progress.xp}</div>
+      <div className="progress-xp">
+        {t("progress.xp")}: {xp} · {t("progress.level")}: {level}
+      </div>
+      <div
+        className="xp-meter"
+        role="progressbar"
+        aria-label={t("progress.xpProgress")}
+        aria-valuemin={0}
+        aria-valuemax={XP_PER_LEVEL}
+        aria-valuenow={xpIntoLevel}
+      >
+        <div className="xp-meter-fill" style={{ width: `${xpPercent}%` }} />
+      </div>
+      <div className="xp-meta">
+        <span>{xpIntoLevel}/{XP_PER_LEVEL}</span>
+        <span>{t("progress.toNextLevel", { count: xpToNextLevel })}</span>
+      </div>
       {progress.streak != null && progress.streak > 0 && (
         <div className="progress-streak">
           {t("progress.streak")}: {progress.streak} {progress.streak === 1 ? t("progress.streakDay") : t("progress.streakDays")}

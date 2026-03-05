@@ -34,7 +34,7 @@ export function getStoredUser() {
   if (!token) return null;
   try {
     const payload = JSON.parse(atob(token.split(".")[1]));
-    return { id: payload.sub, role: payload.role };
+    return { id: payload.sub ?? payload.id, role: payload.role };
   } catch {
     return null;
   }

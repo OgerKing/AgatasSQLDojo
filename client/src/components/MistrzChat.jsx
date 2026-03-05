@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { API_BASE } from "../api";
+import { apiFetch, API_BASE } from "../api";
 
 /**
  * Chat UI for Mistrz. Sends message + context + locale; streams reply via SSE.
@@ -26,7 +26,7 @@ export function MistrzChat({ context, disabled }) {
 
     const locale = i18n.language?.startsWith("en") ? "en" : "pl";
     try {
-      const res = await fetch(API_BASE + "/mistrz", {
+      const res = await apiFetch(API_BASE + "/mistrz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: msg, context, locale }),
@@ -42,34 +42,53 @@ export function MistrzChat({ context, disabled }) {
       }
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
+      let buffer = "";
       let full = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const raw = line.slice(6);
-            if (raw === "[DONE]") continue;
-            try {
-              const data = JSON.parse(raw);
-              if (data.error || data.errorCode) {
-                setStreamError(data.errorCode ? t("mistrz.error") : data.error);
-                continue;
-              }
-              if (data.content) {
-                full += data.content;
-                setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantId ? { ...m, content: full } : m
-                  )
-                );
-              }
-            } catch (_) {}
+
+      function consumeEvent(rawEvent) {
+        const dataLines = rawEvent
+          .split("\n")
+          .filter((line) => line.startsWith("data:"))
+          .map((line) => line.slice(5).trimStart());
+        if (!dataLines.length) return;
+        const raw = dataLines.join("\n");
+        if (raw === "[DONE]") return;
+        try {
+          const data = JSON.parse(raw);
+          if (data.error || data.errorCode) {
+            setStreamError(data.errorCode ? t("mistrz.error") : data.error);
+            return;
           }
+          if (data.content) {
+            full += data.content;
+            setMessages((prev) =>
+              prev.map((m) =>
+                m.id === assistantId ? { ...m, content: full } : m
+              )
+            );
+          }
+        } catch (parseErr) {
+          // Ignore malformed partial SSE payloads; stream continues.
+          void parseErr;
         }
       }
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          buffer += decoder.decode();
+          break;
+        }
+        buffer += decoder.decode(value, { stream: true });
+        let boundary = buffer.indexOf("\n\n");
+        while (boundary !== -1) {
+          const rawEvent = buffer.slice(0, boundary);
+          buffer = buffer.slice(boundary + 2);
+          consumeEvent(rawEvent);
+          boundary = buffer.indexOf("\n\n");
+        }
+      }
+      if (buffer.trim()) consumeEvent(buffer.trim());
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     } catch (err) {
       setStreamError(err.message || t("mistrz.errorConnection"));

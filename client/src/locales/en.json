@@ -70,8 +70,12 @@
   },
   "progress": {
     "ariaSummary": "Progress: completed tasks, rank, XP, streak and badges",
+    "xpProgress": "XP progress to next level",
     "of": "of",
     "ofTasks": "tasks",
+    "xp": "XP",
+    "level": "Level",
+    "toNextLevel": "{{count}} XP to next level",
     "stopienUczen": "Apprentice",
     "stopienCzeladnik": "Journeyman",
     "stopienMistrz": "Master",

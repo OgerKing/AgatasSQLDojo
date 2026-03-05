@@ -1,9 +1,18 @@
 import { Router } from "express";
 import { db } from "../db.js";
 import { optionalAuth } from "../middleware/auth.js";
-import { listZadania, getZadanieById, THEMES } from "../zadania/content.js";
+import {
+  listZadania,
+  getZadanieById,
+  getFriendlyReference,
+  getCuratedDetailLocalization,
+  THEMES,
+} from "../zadania/content.js";
 
 export const zadaniaRouter = Router();
+function resolveLocale(value) {
+  return typeof value === "string" && value.toLowerCase().startsWith("en") ? "en" : "pl";
+}
 
 zadaniaRouter.get("/", optionalAuth, async (req, res) => {
   let completedIds = [];
@@ -20,7 +29,8 @@ zadaniaRouter.get("/", optionalAuth, async (req, res) => {
   const themeParam = req.query.theme;
   const theme =
     themeParam && THEMES.includes(themeParam) ? themeParam : preferredTheme;
-  res.json(listZadania(completedIds, theme));
+  const locale = resolveLocale(req.query.locale);
+  res.json(listZadania(completedIds, theme, locale));
 });
 
 zadaniaRouter.get("/:id", (req, res) => {
@@ -34,5 +44,7 @@ zadaniaRouter.get("/:id", (req, res) => {
   }
   // Don't send expected_result, seed_sql, or solution_sql to client (would give away answer)
   const { expected_result, seed_sql, solution_sql, ...rest } = zadanie;
-  res.json(rest);
+  const locale = resolveLocale(req.query.locale);
+  const localized = getCuratedDetailLocalization(rest, locale);
+  res.json({ ...localized, reference: getFriendlyReference(rest.reference) });
 });

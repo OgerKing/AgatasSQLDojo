@@ -26,6 +26,7 @@ export function ThemeSwitcher() {
   const { t } = useTranslation();
   const [preferredTheme, setPreferredTheme] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectionFxTheme, setSelectionFxTheme] = useState("");
 
   useEffect(() => {
     if (!isLoggedIn() || getStoredUser()?.role !== "student") return;
@@ -49,6 +50,8 @@ export function ThemeSwitcher() {
       if (r.ok) {
         const nextTheme = applyTheme(theme);
         setPreferredTheme(nextTheme);
+        setSelectionFxTheme(nextTheme);
+        window.setTimeout(() => setSelectionFxTheme(""), 420);
         window.dispatchEvent(new Event("theme-changed"));
       }
     } finally {
@@ -65,7 +68,11 @@ export function ThemeSwitcher() {
         <button
           key={id}
           type="button"
-          className={"theme-btn" + (preferredTheme === id ? " active" : "")}
+          className={
+            "theme-btn" +
+            (preferredTheme === id ? " active" : "") +
+            (selectionFxTheme === id ? " pulse-once" : "")
+          }
           onClick={() => selectTheme(id)}
           disabled={loading}
           title={THEME_LABELS[id] || id}

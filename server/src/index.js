@@ -59,6 +59,10 @@ async function start() {
     console.error("Failed to start: DATABASE_URL is not set. Copy server/.env.example to server/.env and set DATABASE_URL (e.g. postgres://cech:cech@localhost:5432/cech).");
     process.exit(1);
   }
+  if (!process.env.JWT_SECRET) {
+    console.error("Failed to start: JWT_SECRET is not set. Configure JWT_SECRET in your environment.");
+    process.exit(1);
+  }
   try {
     await runMigrations();
     await seedUsersIfEmpty();

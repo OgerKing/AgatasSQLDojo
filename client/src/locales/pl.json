@@ -70,8 +70,12 @@
   },
   "progress": {
     "ariaSummary": "Postęp: ukończone zadania, stopień, XP, seria i odznaki",
+    "xpProgress": "Postęp XP do następnego poziomu",
     "of": "z",
     "ofTasks": "zadań",
+    "xp": "XP",
+    "level": "Poziom",
+    "toNextLevel": "{{count}} XP do następnego poziomu",
     "stopienUczen": "Uczeń",
     "stopienCzeladnik": "Czeladnik",
     "stopienMistrz": "Mistrz",

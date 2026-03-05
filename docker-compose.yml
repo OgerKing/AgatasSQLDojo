@@ -21,6 +21,7 @@ services:
     environment:
       DATABASE_URL: postgres://cech:cech@postgres:5432/cech
       PORT: 3001
+      JWT_SECRET: dev-jwt-secret-change-me
       RUN_MIGRATIONS: "1"
     ports:
       - "3001:3001"

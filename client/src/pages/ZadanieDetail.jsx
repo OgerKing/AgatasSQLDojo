@@ -5,6 +5,19 @@ import { apiFetch, isLoggedIn, API_BASE } from "../api";
 import { MistrzChat } from "../components/MistrzChat";
 import { ProgressBar } from "../components/ProgressBar";
 
+const LIKELY_POLISH_RE = /[ąćęłńóśźż]|(^|\s)(pokaż|użyj|sprawdź|porównaj|sortuj|filtruj|grupuj|wstaw|usuń|zaktualizuj|tabel|wiersz|kolumn|zapytani|schemat|zadani|wydarze|miejsce|nazwa)(\b|$)/i;
+
+function normalizeEnglishDetail(data, locale) {
+  if (!data || locale !== "en") return data;
+  const next = { ...data };
+  const title = typeof next.title === "string" ? next.title.trim() : "";
+  const goal = typeof next.goal === "string" ? next.goal.trim() : "";
+  const concept = typeof next.concept === "string" && next.concept.trim() ? next.concept.trim() : "SQL";
+  if (!title || LIKELY_POLISH_RE.test(title)) next.title = `${concept} challenge`;
+  if (!goal || LIKELY_POLISH_RE.test(goal)) next.goal = `Practice ${concept} in this task.`;
+  return next;
+}
+
 export function ZadanieDetail() {
   const { id } = useParams();
   const { t, i18n } = useTranslation();
@@ -21,10 +34,10 @@ export function ZadanieDetail() {
   useEffect(() => {
     let cancelled = false;
     const locale = i18n.language?.startsWith("en") ? "en" : "pl";
-    fetch(API_BASE + `/zadania/${id}?locale=${locale}`)
+    apiFetch(API_BASE + `/zadania/${id}?locale=${locale}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("Not found"))))
       .then((data) => {
-        if (!cancelled) setZadanie(data);
+        if (!cancelled) setZadanie(normalizeEnglishDetail(data, locale));
       })
       .catch(() => {
         if (!cancelled) setZadanie(null);
@@ -42,7 +55,7 @@ export function ZadanieDetail() {
     setAttemptCount((c) => c + 1);
     const locale = i18n.language?.startsWith("en") ? "en" : "pl";
     try {
-      const res = await fetch(API_BASE + "/run-sql", {
+      const res = await apiFetch(API_BASE + "/run-sql", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ zadanie_id: id, query, locale }),
@@ -53,11 +66,11 @@ export function ZadanieDetail() {
         setCelebration(true);
         setTimeout(() => setCelebration(false), 2500);
         const token = localStorage.getItem("cech_token");
-        if (token) {
+        if (token && data.completion_token) {
           const progressRes = await apiFetch("/api/progress", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ zadanie_id: id }),
+            body: JSON.stringify({ zadanie_id: id, completion_token: data.completion_token }),
           });
           const progressData = await progressRes.json();
           if (progressData.completed_zadania?.length === 1) setFirstCompletion(true);

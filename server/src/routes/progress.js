@@ -2,7 +2,8 @@ import { Router } from "express";
 import { db } from "../db.js";
 import { requireAuth } from "../middleware/auth.js";
 import { updateStreak, isStreakAtRisk } from "../streak.js";
-import { getHighestStopien } from "../zadania/content.js";
+import { getHighestStopien, getZadanieById } from "../zadania/content.js";
+import { verifyCompletionToken } from "../middleware/auth.js";
 
 export const progressRouter = Router();
 progressRouter.use(requireAuth);
@@ -47,8 +48,29 @@ progressRouter.post("/", async (req, res) => {
     return res.status(403).json({ error: true, code: "FORBIDDEN", message: "Tylko dla ucznia." });
   }
   const { zadanie_id: zadanieId } = req.body || {};
-  if (!zadanieId) {
-    return res.status(400).json({ error: true, code: "BAD_REQUEST", message: "Potrzebne: zadanie_id." });
+  const { completion_token: completionToken } = req.body || {};
+  if (!zadanieId || !completionToken) {
+    return res.status(400).json({
+      error: true,
+      code: "BAD_REQUEST",
+      message: "Potrzebne: zadanie_id oraz completion_token.",
+    });
+  }
+  const zadanie = getZadanieById(zadanieId);
+  if (!zadanie) {
+    return res.status(404).json({ error: true, code: "NOT_FOUND", message: "Nie znaleziono zadania." });
+  }
+  const completionPayload = verifyCompletionToken(completionToken);
+  if (
+    !completionPayload ||
+    completionPayload.user_id !== req.user.id ||
+    completionPayload.zadanie_id !== zadanieId
+  ) {
+    return res.status(403).json({
+      error: true,
+      code: "INVALID_COMPLETION_TOKEN",
+      message: "Nieprawidłowe potwierdzenie ukończenia zadania.",
+    });
   }
 
   const cur = await db.query(

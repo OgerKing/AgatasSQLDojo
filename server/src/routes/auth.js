@@ -45,6 +45,7 @@ authRouter.post("/login", async (req, res) => {
   }
 
   const token = signToken({
+    sub: user.id,
     id: user.id,
     email: user.email,
     role: user.role,
