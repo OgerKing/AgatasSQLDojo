@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
- * Chat UI for Mistrz. Sends message + context; streams reply via SSE.
+ * Chat UI for Mistrz. Sends message + context + locale; streams reply via SSE.
  */
 export function MistrzChat({ context, disabled }) {
+  const { t, i18n } = useTranslation();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
@@ -21,15 +23,21 @@ export function MistrzChat({ context, disabled }) {
     const assistantId = Date.now();
     setMessages((prev) => [...prev, { role: "assistant", content: "", id: assistantId }]);
 
+    const locale = i18n.language?.startsWith("en") ? "en" : "pl";
     try {
       const res = await fetch("/api/mistrz", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg, context }),
+        body: JSON.stringify({ message: msg, context, locale }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || "Błąd Mistrza.");
+        const msg = data.code === "MASTER_UNAVAILABLE"
+          ? t("errors.masterUnavailable")
+          : data.code === "NEED_MESSAGE"
+          ? t("errors.needMessage")
+          : (data.message || t("mistrz.error"));
+        throw new Error(msg);
       }
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -45,8 +53,8 @@ export function MistrzChat({ context, disabled }) {
             if (raw === "[DONE]") continue;
             try {
               const data = JSON.parse(raw);
-              if (data.error) {
-                setStreamError(data.error);
+              if (data.error || data.errorCode) {
+                setStreamError(data.errorCode ? t("mistrz.error") : data.error);
                 continue;
               }
               if (data.content) {
@@ -63,10 +71,10 @@ export function MistrzChat({ context, disabled }) {
       }
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     } catch (err) {
-      setStreamError(err.message || "Błąd połączenia.");
+      setStreamError(err.message || t("mistrz.errorConnection"));
       setMessages((prev) =>
         prev.map((m) =>
-          m.id === assistantId ? { ...m, content: "(Nie udało się pobrać odpowiedzi.)" } : m
+          m.id === assistantId ? { ...m, content: t("mistrz.errorNoResponse") } : m
         )
       );
     } finally {
@@ -75,15 +83,15 @@ export function MistrzChat({ context, disabled }) {
   }
 
   return (
-    <section className="mistrz-chat">
-      <h2>Zapytaj Mistrza</h2>
+    <section className="mistrz-chat" aria-labelledby="mistrz-title">
+      <h2 id="mistrz-title">{t("mistrz.title")}</h2>
       <div className="mistrz-messages">
         {messages.length === 0 && (
-          <p className="mistrz-hint">Zadaj pytanie lub kliknij „Podpowiedź”.</p>
+          <p className="mistrz-hint">{t("mistrz.hint")}</p>
         )}
         {messages.map((m, i) => (
           <div key={i} className={`mistrz-msg mistrz-${m.role}`}>
-            {m.role === "user" ? "Ty: " : "Mistrz: "}
+            {m.role === "user" ? `${t("mistrz.you")}: ` : `${t("mistrz.mistrz")}: `}
             {m.content || (m.role === "assistant" && streaming ? "…" : "")}
           </div>
         ))}
@@ -96,19 +104,20 @@ export function MistrzChat({ context, disabled }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
-          placeholder="Napisz do Mistrza…"
+          placeholder={t("mistrz.placeholder")}
           disabled={disabled}
+          aria-label={t("mistrz.placeholder")}
         />
         <button type="button" onClick={() => sendMessage()} disabled={streaming || disabled}>
-          Wyślij
+          {t("mistrz.send")}
         </button>
         <button
           type="button"
-          onClick={() => sendMessage("Daj mi podpowiedź.")}
+          onClick={() => sendMessage(t("mistrz.hintMessage"))}
           disabled={streaming || disabled}
           className="mistrz-hint-btn"
         >
-          Podpowiedź
+          {t("mistrz.hintButton")}
         </button>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { db } from "../db.js";
 import { requireAuth } from "../middleware/auth.js";
+import { updateStreak, isStreakAtRisk } from "../streak.js";
 
 export const progressRouter = Router();
 progressRouter.use(requireAuth);
@@ -25,6 +26,7 @@ progressRouter.get("/", async (req, res) => {
       last_activity_date: null,
       achievements: [],
       preferred_theme: "polonia",
+      streak_at_risk: true,
     });
   }
   res.json({
@@ -35,6 +37,7 @@ progressRouter.get("/", async (req, res) => {
     last_activity_date: row.last_activity_date,
     achievements: row.achievements || [],
     preferred_theme: row.preferred_theme || "polonia",
+    streak_at_risk: isStreakAtRisk(row.last_activity_date),
   });
 });
 
@@ -48,27 +51,46 @@ progressRouter.post("/", async (req, res) => {
   }
 
   const cur = await db.query(
-    "SELECT completed_zadania, xp FROM progress WHERE student_id = $1",
+    "SELECT completed_zadania, xp, streak_days, last_activity_date, achievements FROM progress WHERE student_id = $1",
     [req.user.id]
   );
-  const completed = (cur.rows[0]?.completed_zadania || []).slice();
+  const curRow = cur.rows[0];
+  const completed = (curRow?.completed_zadania || []).slice();
   const already = completed.includes(zadanieId);
+
+  let newXp = curRow?.xp || 0;
+  let newStreak = curRow?.streak_days || 0;
+  let newLastDate = curRow?.last_activity_date;
+  let newAchievements = (curRow?.achievements || []).slice();
+
   if (!already) {
     completed.push(zadanieId);
-    const newXp = (cur.rows[0]?.xp || 0) + XP_PER_ZADANIE;
+    newXp += XP_PER_ZADANIE;
+    const streakUpdate = updateStreak(curRow?.last_activity_date, curRow?.streak_days || 0);
+    newStreak = streakUpdate.streak_days;
+    newLastDate = streakUpdate.last_activity_date;
+    if (completed.length === 1 && !newAchievements.includes("pierwsze-zadanie")) {
+      newAchievements.push("pierwsze-zadanie");
+    }
+    if (newStreak >= 3 && !newAchievements.includes("seria-3")) {
+      newAchievements.push("seria-3");
+    }
     await db.query(
-      `INSERT INTO progress (student_id, completed_zadania, xp, updated_at)
-       VALUES ($1, $2::jsonb, $3, now())
+      `INSERT INTO progress (student_id, completed_zadania, xp, streak_days, last_activity_date, achievements, updated_at)
+       VALUES ($1, $2::jsonb, $3, $4, $5::date, $6::jsonb, now())
        ON CONFLICT (student_id) DO UPDATE SET
          completed_zadania = $2::jsonb,
          xp = $3,
+         streak_days = $4,
+         last_activity_date = $5::date,
+         achievements = $6::jsonb,
          updated_at = now()`,
-      [req.user.id, JSON.stringify(completed), newXp]
+      [req.user.id, JSON.stringify(completed), newXp, newStreak, newLastDate, JSON.stringify(newAchievements)]
     );
   }
 
   const updated = await db.query(
-    "SELECT completed_zadania, current_stopien, xp, streak_days FROM progress WHERE student_id = $1",
+    "SELECT completed_zadania, current_stopien, xp, streak_days, last_activity_date, achievements FROM progress WHERE student_id = $1",
     [req.user.id]
   );
   const row = updated.rows[0];
@@ -77,5 +99,7 @@ progressRouter.post("/", async (req, res) => {
     current_stopien: row?.current_stopien || "uczen",
     xp: row?.xp ?? 0,
     streak: row?.streak_days ?? 0,
+    last_activity_date: row?.last_activity_date,
+    achievements: row?.achievements || [],
   });
 });

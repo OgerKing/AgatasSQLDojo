@@ -9,21 +9,21 @@ mistrzRouter.post("/", async (req, res) => {
   if (!process.env.OPENAI_API_KEY) {
     return res.status(503).json({
       error: true,
-      code: "SERVICE_UNAVAILABLE",
+      code: "MASTER_UNAVAILABLE",
       message: "Mistrz jest niedostępny (brak konfiguracji).",
     });
   }
 
-  const { message, context } = req.body || {};
+  const { message, context, locale } = req.body || {};
   if (!message || typeof message !== "string") {
     return res.status(400).json({
       error: true,
-      code: "BAD_REQUEST",
+      code: "NEED_MESSAGE",
       message: "Potrzebne: message (tekst od ucznia).",
     });
   }
-
-  const systemPrompt = buildSystemPrompt() + buildContextBlock(context || {});
+  const lang = locale === "en" ? "en" : "pl";
+  const systemPrompt = buildSystemPrompt(lang) + buildContextBlock(context || {}, lang);
 
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -50,7 +50,7 @@ mistrzRouter.post("/", async (req, res) => {
     res.write("data: [DONE]\n\n");
   } catch (err) {
     console.error("Mistrz error:", err.message);
-    res.write(`data: ${JSON.stringify({ error: err.message || "Błąd Mistrza." })}\n\n`);
+    res.write(`data: ${JSON.stringify({ errorCode: "MASTER_ERROR", error: err.message || "Błąd Mistrza." })}\n\n`);
   } finally {
     res.end();
   }

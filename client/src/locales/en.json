@@ -1,0 +1,102 @@
+{
+  "nav": {
+    "cech": "Guild",
+    "zadania": "Tasks",
+    "zadaniaList": "Task list",
+    "logout": "Log out",
+    "login": "Log in",
+    "teacher": "Teacher dashboard"
+  },
+  "home": {
+    "title": "Guild"
+  },
+  "login": {
+    "title": "Log in",
+    "hint": "Test: student@cech.local / teacher@cech.local, password: cech",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "roleStudent": "Student",
+    "roleTeacher": "Teacher",
+    "submit": "Log in",
+    "submitting": "Logging in…",
+    "errorLogin": "Login failed.",
+    "errorConnection": "Connection error.",
+    "errorRole": "Required: email, password, role (student or teacher)."
+  },
+  "zadania": {
+    "title": "Tasks",
+    "loading": "Loading…"
+  },
+  "zadanie": {
+    "goal": "Goal",
+    "notFound": "Task not found.",
+    "schema": "Schema",
+    "sqlLabel": "SQL query",
+    "sqlPlaceholder": "e.g. SELECT * FROM wydarzenia",
+    "run": "Run",
+    "running": "Running…",
+    "result": "Result",
+    "rowsReturned": "Returned {{count}} rows",
+    "nextTask": "Next task →",
+    "chooseTask": "Choose task",
+    "correct": "Correct! Well done.",
+    "firstCorrect": "You are an Apprentice! Well done."
+  },
+  "errors": {
+    "forbidden": "Access denied.",
+    "invalidRole": "Role must be student or teacher.",
+    "notFound": "Not found.",
+    "badRequest": "Invalid request.",
+    "invalidCredentials": "Invalid email or password.",
+    "masterUnavailable": "Master is unavailable (not configured).",
+    "needMessage": "Required: message (text from student).",
+    "needZadanieAndQuery": "Required: zadanie_id and query.",
+    "needZadanieId": "Required: zadanie_id.",
+    "onlyStudent": "Students only.",
+    "onlyTeacher": "Teachers only."
+  },
+  "common": {
+    "language": "Language",
+    "polish": "Polish",
+    "english": "English"
+  },
+  "progress": {
+    "ariaSummary": "Progress: completed tasks, rank, XP, streak and badges",
+    "of": "of",
+    "ofTasks": "tasks",
+    "stopienUczen": "Apprentice",
+    "stopienCzeladnik": "Journeyman",
+    "stopienMistrz": "Master",
+    "streak": "Streak",
+    "streakDay": "day",
+    "streakDays": "days",
+    "streakAtRisk": "Streak at risk – complete a task today!",
+    "achievementFirst": "First task",
+    "achievementStreak3": "3-day streak"
+  },
+  "mistrz": {
+    "title": "Ask the Master",
+    "hint": "Ask a question or click “Hint”.",
+    "you": "You",
+    "mistrz": "Master",
+    "error": "Master error.",
+    "errorConnection": "Connection error.",
+    "errorNoResponse": "(Failed to get response.)",
+    "placeholder": "Write to the Master…",
+    "send": "Send",
+    "hintButton": "Hint",
+    "hintMessage": "Give me a hint."
+  },
+  "teacher": {
+    "title": "Teacher dashboard",
+    "loading": "Loading…",
+    "errorAccess": "Access denied. Log in as teacher.",
+    "noStudents": "No linked students.",
+    "completedTasks": "Completed tasks",
+    "stopien": "Rank",
+    "xp": "XP",
+    "streakDays": "Streak (days)",
+    "lastActivity": "Last activity"
+  }
+}

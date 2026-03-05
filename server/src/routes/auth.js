@@ -10,14 +10,14 @@ authRouter.post("/login", async (req, res) => {
   if (!email || !password || !role) {
     return res.status(400).json({
       error: true,
-      code: "BAD_REQUEST",
+      code: "MISSING_FIELDS",
       message: "Potrzebne: email, password, role (student lub teacher).",
     });
   }
   if (!["student", "teacher"].includes(role)) {
     return res.status(400).json({
       error: true,
-      code: "BAD_REQUEST",
+      code: "INVALID_ROLE",
       message: "Role musi być student lub teacher.",
     });
   }
@@ -30,7 +30,7 @@ authRouter.post("/login", async (req, res) => {
   if (!user) {
     return res.status(401).json({
       error: true,
-      code: "UNAUTHORIZED",
+      code: "INVALID_CREDENTIALS",
       message: "Nieprawidłowy email lub hasło.",
     });
   }
@@ -39,7 +39,7 @@ authRouter.post("/login", async (req, res) => {
   if (!ok) {
     return res.status(401).json({
       error: true,
-      code: "UNAUTHORIZED",
+      code: "INVALID_CREDENTIALS",
       message: "Nieprawidłowy email lub hasło.",
     });
   }

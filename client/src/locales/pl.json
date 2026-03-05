@@ -1,0 +1,102 @@
+{
+  "nav": {
+    "cech": "Cech",
+    "zadania": "Zadania",
+    "zadaniaList": "Lista zadań",
+    "logout": "Wyloguj",
+    "login": "Zaloguj",
+    "teacher": "Panel nauczyciela"
+  },
+  "home": {
+    "title": "Cech"
+  },
+  "login": {
+    "title": "Zaloguj się",
+    "hint": "Test: student@cech.local / teacher@cech.local, hasło: cech",
+    "email": "Email",
+    "password": "Hasło",
+    "role": "Rola",
+    "roleStudent": "Uczeń",
+    "roleTeacher": "Nauczyciel",
+    "submit": "Zaloguj",
+    "submitting": "Logowanie…",
+    "errorLogin": "Błąd logowania.",
+    "errorConnection": "Błąd połączenia.",
+    "errorRole": "Potrzebne: email, password, role (student lub teacher)."
+  },
+  "zadania": {
+    "title": "Zadania",
+    "loading": "Ładowanie…"
+  },
+  "zadanie": {
+    "goal": "Cel",
+    "notFound": "Nie znaleziono zadania.",
+    "schema": "Schemat",
+    "sqlLabel": "Zapytanie SQL",
+    "sqlPlaceholder": "np. SELECT * FROM wydarzenia",
+    "run": "Uruchom",
+    "running": "Uruchamianie…",
+    "result": "Wynik",
+    "rowsReturned": "Zwrócono {{count}} wierszy",
+    "nextTask": "Następne zadanie →",
+    "chooseTask": "Wybierz zadanie",
+    "correct": "Dobrze! Poprawny wynik.",
+    "firstCorrect": "Jesteś Uczeń! Poprawny wynik."
+  },
+  "errors": {
+    "forbidden": "Brak dostępu.",
+    "invalidRole": "Rola musi być student lub teacher.",
+    "notFound": "Nie znaleziono.",
+    "badRequest": "Nieprawidłowe żądanie.",
+    "invalidCredentials": "Nieprawidłowy email lub hasło.",
+    "masterUnavailable": "Mistrz jest niedostępny (brak konfiguracji).",
+    "needMessage": "Potrzebne: wiadomość (tekst od ucznia).",
+    "needZadanieAndQuery": "Potrzebne: zadanie_id i query.",
+    "needZadanieId": "Potrzebne: zadanie_id.",
+    "onlyStudent": "Tylko dla ucznia.",
+    "onlyTeacher": "Tylko dla nauczyciela."
+  },
+  "common": {
+    "language": "Język",
+    "polish": "Polski",
+    "english": "Angielski"
+  },
+  "progress": {
+    "ariaSummary": "Postęp: ukończone zadania, stopień, XP, seria i odznaki",
+    "of": "z",
+    "ofTasks": "zadań",
+    "stopienUczen": "Uczeń",
+    "stopienCzeladnik": "Czeladnik",
+    "stopienMistrz": "Mistrz",
+    "streak": "Seria",
+    "streakDay": "dzień",
+    "streakDays": "dni",
+    "streakAtRisk": "Seria zagrożona – ukończ dziś zadanie!",
+    "achievementFirst": "Pierwsze zadanie",
+    "achievementStreak3": "Seria 3 dni"
+  },
+  "mistrz": {
+    "title": "Zapytaj Mistrza",
+    "hint": "Zadaj pytanie lub kliknij „Podpowiedź”.",
+    "you": "Ty",
+    "mistrz": "Mistrz",
+    "error": "Błąd Mistrza.",
+    "errorConnection": "Błąd połączenia.",
+    "errorNoResponse": "(Nie udało się pobrać odpowiedzi.)",
+    "placeholder": "Napisz do Mistrza…",
+    "send": "Wyślij",
+    "hintButton": "Podpowiedź",
+    "hintMessage": "Daj mi podpowiedź."
+  },
+  "teacher": {
+    "title": "Panel nauczyciela",
+    "loading": "Ładowanie…",
+    "errorAccess": "Brak dostępu. Zaloguj się jako nauczyciel.",
+    "noStudents": "Brak przypisanych uczniów.",
+    "completedTasks": "Ukończone zadania",
+    "stopien": "Stopień",
+    "xp": "XP",
+    "streakDays": "Seria (dni)",
+    "lastActivity": "Ostatnia aktywność"
+  }
+}

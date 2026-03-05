@@ -32,6 +32,12 @@ docker compose up --build
 
 Server at http://localhost:3001; run client separately with `npm run dev` in `client/` for frontend dev.
 
+## Deployment (Phase 5)
+
+- **Target:** AWS EC2 Ubuntu. Run app (SPA + Node API) in Docker; Postgres on same host or RDS.
+- **Env:** Document in `.env.example` / `server/.env`: `DATABASE_URL`, `OPENAI_API_KEY`, `OPENAI_MODEL`, `PORT`, `RUN_MIGRATIONS`. Logging/errors: server uses `console.error` for startup and Mistrz errors.
+- **Build:** `client`: `npm run build` → static assets; serve via Express static or nginx. `server`: run via `node` or Docker; migrations on first deploy with `RUN_MIGRATIONS=1`.
+
 ## Project layout
 
 - `client/` – React SPA (Vite)

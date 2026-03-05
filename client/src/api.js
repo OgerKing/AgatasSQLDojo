@@ -19,3 +19,22 @@ export function apiFetch(url, options = {}) {
 export function isLoggedIn() {
   return !!getToken();
 }
+
+/** Decode JWT payload (no verify; for role only). */
+export function getStoredUser() {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return { id: payload.sub, role: payload.role };
+  } catch {
+    return null;
+  }
+}
+
+export function getTeacherStudents() {
+  return apiFetch("/api/teacher/students").then((r) => {
+    if (!r.ok) throw new Error("Forbidden or error");
+    return r.json();
+  });
+}

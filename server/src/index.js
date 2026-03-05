@@ -7,6 +7,7 @@ import { progressRouter } from "./routes/progress.js";
 import { runSqlRouter } from "./routes/runSql.js";
 import { zadaniaRouter } from "./routes/zadania.js";
 import { mistrzRouter } from "./routes/mistrz.js";
+import { teacherRouter } from "./routes/teacher.js";
 import { db, runMigrations } from "./db.js";
 import { seedUsersIfEmpty } from "./seedUsers.js";
 
@@ -22,6 +23,7 @@ app.use("/api/progress", progressRouter);
 app.use("/api/run-sql", runSqlRouter);
 app.use("/api/zadania", zadaniaRouter);
 app.use("/api/mistrz", mistrzRouter);
+app.use("/api/teacher", teacherRouter);
 
 app.get("/api", (_req, res) => {
   res.json({ app: "Agatas SQL Cech", version: "0.1.0" });

@@ -6,11 +6,11 @@ import { rowsMatchExpected } from "../progress.js";
 export const runSqlRouter = Router();
 
 runSqlRouter.post("/", (req, res) => {
-  const { zadanie_id: zadanieId, query } = req.body || {};
+  const { zadanie_id: zadanieId, query, locale } = req.body || {};
   if (!zadanieId || typeof query !== "string") {
     return res.status(400).json({
       error: true,
-      code: "BAD_REQUEST",
+      code: "NEED_ZADANIE_AND_QUERY",
       message: "Potrzebne: zadanie_id i query.",
     });
   }
@@ -24,7 +24,7 @@ runSqlRouter.post("/", (req, res) => {
     });
   }
 
-  const result = runInSandbox(zadanie, query);
+  const result = runInSandbox(zadanie, query, { locale });
   if (result.error) {
     return res.json({ error: result.error });
   }
