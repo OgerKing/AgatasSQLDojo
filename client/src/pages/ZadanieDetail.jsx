@@ -20,7 +20,8 @@ export function ZadanieDetail() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(API_BASE + `/zadania/${id}`)
+    const locale = i18n.language?.startsWith("en") ? "en" : "pl";
+    fetch(API_BASE + `/zadania/${id}?locale=${locale}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("Not found"))))
       .then((data) => {
         if (!cancelled) setZadanie(data);
@@ -32,7 +33,7 @@ export function ZadanieDetail() {
         if (!cancelled) setLoading(false);
       });
     return () => { cancelled = true; };
-  }, [id]);
+  }, [id, i18n.language]);
 
   async function handleRun() {
     setRunning(true);
@@ -86,6 +87,14 @@ export function ZadanieDetail() {
       <p><Link to="/">{t("nav.cech")}</Link> → <Link to="/zadania">{t("nav.zadania")}</Link> → {zadanie.title}</p>
       <h1>{zadanie.title}</h1>
       <p className="goal"><strong>{t("zadanie.goal")}:</strong> {zadanie.goal}</p>
+      {zadanie.reference && (
+        <p className="reference">
+          <strong>{t("zadanie.reference")}:</strong>{" "}
+          <a href={zadanie.reference} target="_blank" rel="noopener noreferrer">
+            {t("zadanie.openReference")}
+          </a>
+        </p>
+      )}
 
       <div className="editor-layout">
         <section className="schema-panel">

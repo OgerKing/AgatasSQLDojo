@@ -35,6 +35,8 @@
   },
   "zadanie": {
     "goal": "Goal",
+    "reference": "Reference",
+    "openReference": "Open reference page",
     "notFound": "Task not found.",
     "schema": "Schema",
     "sqlLabel": "SQL query",

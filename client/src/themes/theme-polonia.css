@@ -1,0 +1,35 @@
+:root[data-theme="polonia"] {
+  --font-display: "Georgia", "Times New Roman", serif;
+  --font-heading: "Segoe UI", "Arial", sans-serif;
+  --font-body: "Segoe UI", "Arial", sans-serif;
+
+  --bg: #efe6d8;
+  --surface: #f9f2e6;
+  --surface-alt: #e8dac4;
+  --surface-soft: #f2e8d7;
+  --text: #312314;
+  --muted: #6e5c47;
+  --primary: #6d1f1f;
+  --secondary: #5a4332;
+  --accent: #af8446;
+  --success: #3f6847;
+  --warning: #9d7037;
+  --danger: #8f3a2f;
+  --border: rgba(44, 36, 24, 0.14);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-soft: 0 10px 20px rgba(80, 56, 30, 0.12);
+  --shadow-strong: 0 22px 38px rgba(80, 56, 30, 0.2);
+
+  --hero-gradient: radial-gradient(circle at 12% 8%, rgba(109, 31, 31, 0.16), transparent 38%),
+    radial-gradient(circle at 84% 10%, rgba(175, 132, 70, 0.12), transparent 34%),
+    linear-gradient(140deg, #f4ebdd 0%, #e9dcc7 100%);
+  --content-gradient: linear-gradient(180deg, #f1e7d8 0%, #e3d2ba 100%);
+  --theme-bg-image: url("../assets/themes/polonia-guild-bg.svg");
+  --theme-bg-size: 980px auto;
+  --theme-bg-repeat: repeat;
+  --theme-bg-position: center top;
+  --theme-emblem-image: url("../assets/themes/polonia-emblem.svg");
+}

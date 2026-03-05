@@ -35,6 +35,8 @@
   },
   "zadanie": {
     "goal": "Cel",
+    "reference": "Dokumentacja",
+    "openReference": "Otwórz stronę referencyjną",
     "notFound": "Nie znaleziono zadania.",
     "schema": "Schemat",
     "sqlLabel": "Zapytanie SQL",

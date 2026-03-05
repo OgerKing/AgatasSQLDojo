@@ -1,0 +1,89 @@
+:root {
+  --font-display: "Trebuchet MS", "Segoe UI", "Arial", sans-serif;
+  --font-heading: "Segoe UI", "Arial", sans-serif;
+  --font-body: "Segoe UI", "Arial", sans-serif;
+  --font-mono: "Cascadia Mono", "Consolas", monospace;
+
+  --bg: #0f1224;
+  --surface: #1a1f3f;
+  --surface-alt: #252d58;
+  --surface-soft: #131735;
+  --text: #f6f8ff;
+  --muted: #b7c0e8;
+  --primary: #53d7ff;
+  --secondary: #ff4db2;
+  --accent: #ffd33d;
+  --success: #2be090;
+  --warning: #ffb340;
+  --danger: #ff5c78;
+  --border: color-mix(in srgb, var(--text) 14%, transparent);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --shadow-strong: 0 16px 36px rgba(0, 0, 0, 0.3);
+
+  --hero-gradient: radial-gradient(circle at 0% 0%, rgba(83, 215, 255, 0.26), transparent 38%),
+    radial-gradient(circle at 100% 0%, rgba(255, 77, 178, 0.2), transparent 34%),
+    linear-gradient(145deg, #11152d 0%, #0f1331 55%, #151b38 100%);
+  --content-gradient: linear-gradient(180deg, color-mix(in srgb, var(--bg) 92%, black 8%), var(--bg));
+  --theme-bg-image: none;
+  --theme-bg-size: cover;
+  --theme-bg-repeat: no-repeat;
+  --theme-bg-position: center top;
+  --theme-emblem-image: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text);
+  background-image: var(--theme-bg-image), var(--content-gradient);
+  background-size: var(--theme-bg-size), cover;
+  background-repeat: var(--theme-bg-repeat), no-repeat;
+  background-position: var(--theme-bg-position), center top;
+  background-attachment: fixed;
+  transition: background 220ms ease, color 220ms ease;
+}
+
+#root {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem clamp(1rem, 3vw, 2.5rem) 2rem;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: color-mix(in srgb, var(--primary) 74%, white 26%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

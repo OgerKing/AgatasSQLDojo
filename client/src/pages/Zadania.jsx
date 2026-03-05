@@ -7,14 +7,15 @@ import { ProgressBar } from "../components/ProgressBar";
 const FALLBACK_STOPIEN = { uczen: "Uczeń", czeladnik: "Czeladnik", mistrz: "Mistrz" };
 
 export function Zadania() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [list, setList] = useState([]);
   const [themeConfig, setThemeConfig] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const loadZadania = () => {
     setLoading(true);
-    apiFetch(API_BASE + "/zadania")
+    const locale = i18n.language?.startsWith("en") ? "en" : "pl";
+    apiFetch(API_BASE + `/zadania?locale=${locale}`)
       .then((r) => r.json())
       .then(setList)
       .finally(() => setLoading(false));
@@ -22,7 +23,7 @@ export function Zadania() {
 
   useEffect(() => {
     loadZadania();
-  }, []);
+  }, [i18n.language]);
 
   useEffect(() => {
     fetch(API_BASE + "/themes")

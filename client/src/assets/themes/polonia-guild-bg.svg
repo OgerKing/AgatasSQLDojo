@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" viewBox="0 0 900 900">
+  <defs>
+    <pattern id="tile" width="180" height="180" patternUnits="userSpaceOnUse">
+      <rect width="180" height="180" fill="#efe6d8"/>
+      <path d="M90 24 L126 50 L126 96 C126 116 110 132 90 139 C70 132 54 116 54 96 L54 50 Z" fill="none" stroke="#af8446" stroke-opacity="0.16" stroke-width="1.8"/>
+      <path d="M70 72 H110 M90 52 V92" fill="none" stroke="#6d1f1f" stroke-opacity="0.11" stroke-width="1.4"/>
+      <path d="M30 30 H150 M30 150 H150 M30 30 V150 M150 30 V150" fill="none" stroke="#6b553f" stroke-opacity="0.08" stroke-width="1"/>
+      <path d="M22 90 H158 M90 22 V158" fill="none" stroke="#8b6b45" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#tile)"/>
+</svg>

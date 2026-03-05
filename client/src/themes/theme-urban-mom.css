@@ -1,0 +1,35 @@
+:root[data-theme="urban_mom"] {
+  --font-display: "Segoe UI", "Arial", sans-serif;
+  --font-heading: "Segoe UI", "Arial", sans-serif;
+  --font-body: "Segoe UI", "Arial", sans-serif;
+
+  --bg: #161b22;
+  --surface: #1f2731;
+  --surface-alt: #273240;
+  --surface-soft: #1b232d;
+  --text: #e9eef6;
+  --muted: #a2afbf;
+  --primary: #26679e;
+  --secondary: #3e7258;
+  --accent: #b98644;
+  --success: #3f8662;
+  --warning: #b78d4c;
+  --danger: #ab5555;
+  --border: rgba(233, 238, 246, 0.17);
+
+  --radius-sm: 7px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-soft: 0 10px 22px rgba(0, 0, 0, 0.3);
+  --shadow-strong: 0 22px 42px rgba(0, 0, 0, 0.44);
+
+  --hero-gradient: radial-gradient(circle at 8% 0%, rgba(38, 103, 158, 0.22), transparent 36%),
+    radial-gradient(circle at 94% 6%, rgba(62, 114, 88, 0.2), transparent 30%),
+    linear-gradient(145deg, #222c37 0%, #161b22 100%);
+  --content-gradient: linear-gradient(180deg, #1d2631 0%, #161b22 100%);
+  --theme-bg-image: url("../assets/themes/urban-guild-bg.svg");
+  --theme-bg-size: 760px auto;
+  --theme-bg-repeat: repeat;
+  --theme-bg-position: center top;
+  --theme-emblem-image: url("../assets/themes/urban-emblem.svg");
+}

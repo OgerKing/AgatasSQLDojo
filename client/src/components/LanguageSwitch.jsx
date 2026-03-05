@@ -12,7 +12,7 @@ export function LanguageSwitch() {
     <div className="language-switch" role="group" aria-label={t("common.language")}>
       <button
         type="button"
-        className={isPl ? "active" : ""}
+        className={"lang-btn" + (isPl ? " active" : "")}
         onClick={() => i18n.changeLanguage("pl")}
         aria-pressed={isPl}
         aria-label={t("common.polish")}
@@ -22,7 +22,7 @@ export function LanguageSwitch() {
       </button>
       <button
         type="button"
-        className={!isPl ? "active" : ""}
+        className={"lang-btn" + (!isPl ? " active" : "")}
         onClick={() => i18n.changeLanguage("en")}
         aria-pressed={!isPl}
         aria-label={t("common.english")}

@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { apiFetch, API_BASE, isLoggedIn, getStoredUser } from "../api";
+import { applyTheme } from "../theme";
+import poloniaEmblem from "../assets/themes/polonia-emblem.svg";
+import wizardsEmblem from "../assets/themes/wizards-emblem.svg";
+import urbanEmblem from "../assets/themes/urban-emblem.svg";
 
 const THEME_IDS = ["polonia", "wizards", "urban_mom"];
 const THEME_LABELS = {
   polonia: "Polonia",
   wizards: "Wizards school",
   urban_mom: "Two boys & St Bernard",
+};
+const THEME_ICONS = {
+  polonia: poloniaEmblem,
+  wizards: wizardsEmblem,
+  urban_mom: urbanEmblem,
 };
 
 /**
@@ -22,7 +31,10 @@ export function ThemeSwitcher() {
     if (!isLoggedIn() || getStoredUser()?.role !== "student") return;
     apiFetch(API_BASE + "/progress")
       .then((r) => (r.ok ? r.json() : null))
-      .then((data) => data && setPreferredTheme(data.preferred_theme || "polonia"));
+      .then((data) => {
+        const nextTheme = applyTheme(data?.preferred_theme || "polonia");
+        setPreferredTheme(nextTheme);
+      });
   }, []);
 
   async function selectTheme(theme) {
@@ -35,7 +47,8 @@ export function ThemeSwitcher() {
         body: JSON.stringify({ preferred_theme: theme }),
       });
       if (r.ok) {
-        setPreferredTheme(theme);
+        const nextTheme = applyTheme(theme);
+        setPreferredTheme(nextTheme);
         window.dispatchEvent(new Event("theme-changed"));
       }
     } finally {
@@ -56,8 +69,9 @@ export function ThemeSwitcher() {
           onClick={() => selectTheme(id)}
           disabled={loading}
           title={THEME_LABELS[id] || id}
+          aria-label={THEME_LABELS[id] || id}
         >
-          {THEME_LABELS[id] || id}
+          <img src={THEME_ICONS[id]} alt="" aria-hidden className="theme-btn-icon" />
         </button>
       ))}
     </div>
