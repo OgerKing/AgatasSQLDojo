@@ -1,6 +1,15 @@
 /**
  * SQLite sandbox: one DB per request from zadanie schema + seed. Execute learner query as-is.
  * @see TECHNICAL_SPEC §6
+ *
+ * Future extensions (see .cursor/500_LESSONS.md and BUILD_PLAN §6):
+ * - DML (INSERT/UPDATE/DELETE): allow ALLOWED_PREFIXES to include INSERT, UPDATE, DELETE;
+ *   success cannot be "result of learner query"; run learner statement then a verification_sql
+ *   (defined on zadanie) and compare its result to expected_result.
+ * - Transactions: allow multi-statement execution (BEGIN; ...; COMMIT;) for lessons 261–270;
+ *   run statements in sequence in the same DB and optionally run verification SELECT after.
+ * - DDL (CREATE TABLE, etc.): dedicated "DDL mode" or run learner script then verification
+ *   SELECT; sandbox would need to accept CREATE/ALTER/DROP or a separate execution path.
  */
 
 import Database from "better-sqlite3";

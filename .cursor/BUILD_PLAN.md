@@ -163,6 +163,52 @@ Phase 3 and 4 can be parallel after Phase 2 if team capacity allows.
 
 ---
 
-## 6. References and conventions
+## 6. Expansion: 100 tasks and next-task flow
+
+**Goal:** Scale from 3 to 100 SQL tasks and support a “next task only” flow so learners can continue without scrolling a long list.
+
+### 6.1 Deliverables
+
+| # | Deliverable | Notes |
+|---|-------------|--------|
+| 1 | **Expand to 100 zadania** | Add 97 tasks to `server/src/zadania/content.js` (or a data module it imports). Follow [sql-teaching-progression](.cursor/skills/sql-teaching-progression/SKILL.md): SELECT → WHERE → ORDER BY → DISTINCT → Aggregates → GROUP BY → HAVING → JOINs → Subqueries → Window functions. One concept per exercise; map ranks (uczeń → czeladnik → mistrz). Reuse shared schemas (e.g. `wydarzenia`, then add tables for JOINs) to avoid duplication. |
+| 2 | **Shared schema pattern** | Define base DDL + seed once per “schema key”; each task references a schema and supplies id, title, goal, concept, stopień, expected_result. Keeps content maintainable and file size reasonable. |
+| 3 | **GET /api/zadania/next** | New endpoint (optionalAuth): returns the next unlocked, incomplete task for the current student (or first task if not logged in). Response: same shape as GET /api/zadania/:id (no expected_result/seed_sql). 204 when no next (all done). |
+| 4 | **“Next task” in UI** | On the Zadania page (or home): show a single “Your next task” card/link that calls `/api/zadania/next` and links to that zadanie. Full list can remain below (or behind “Show all tasks”) so we don’t have to list all 100. |
+| 5 | **Optional: hide full list** | Config or UX choice: either “next only” by default with “Show full list” expandable, or keep list but make “Continue → Next task” the primary CTA. |
+
+### 6.2 Task count and progression (100 total)
+
+- **~1–5:** SELECT (all rows, specific columns).
+- **~6–20:** WHERE (=, &lt;&gt;, &gt;, &lt;, AND, OR, IN, LIKE, IS NULL).
+- **~21–28:** ORDER BY (ASC, DESC, multiple columns).
+- **~29–32:** DISTINCT.
+- **~33–35:** LIMIT (optional).
+- **~36–50:** Aggregates (COUNT, SUM, AVG, MIN, MAX).
+- **~51–62:** GROUP BY.
+- **~63–68:** HAVING.
+- **~69–85:** JOINs (INNER, then LEFT; multiple tables).
+- **~86–92:** Subqueries (WHERE, FROM, SELECT).
+- **~93–100:** Window functions (OVER, PARTITION BY, ORDER BY in window).
+
+Ranks: early tasks **uczeń**, mid **czeladnik**, advanced **mistrz**. Use 2–3 base table sets (e.g. `wydarzenia`; then `wydarzenia` + `miejsca` or `czlonkowie` + `uczestnictwa`) so JOIN and subquery tasks have minimal schema.
+
+### 6.3 Implementation order
+
+1. **API:** Add `GET /api/zadania/next` in `server/src/routes/zadania.js` (use existing `listZadania(completedIds)` and `getZadanieById`; return first unlocked incomplete, or first task if anonymous).
+2. **UI:** Add “Your next task” (fetch `/api/zadania/next`, link to `/zadanie/:id`). Keep or relax full list on Zadania page.
+3. **Content:** Introduce shared schemas (e.g. constants or a small `schemas` object) in `server/src/zadania/` and refactor the existing 3 tasks to use them.
+4. **Bulk add tasks:** Add tasks in batches by concept (e.g. 1–20 SELECT/WHERE/ORDER BY, then DISTINCT, then aggregates, etc.), each with correct expected_result for the sandbox checker.
+5. **Smoke test:** Run through first 5 and a few later ones (e.g. JOIN, subquery) to confirm unlock order and correct/incorrect detection.
+
+### 6.4 References
+
+- [sql-teaching-progression](.cursor/skills/sql-teaching-progression/SKILL.md) – concept order and exercise design.
+- [TECHNICAL_SPEC](.cursor/TECHNICAL_SPEC.md) §4 (content), §6 (sandbox).
+- Existing: `server/src/zadania/content.js`, `server/src/routes/zadania.js`, `client/src/pages/Zadania.jsx`.
+
+---
+
+## 7. References and conventions
 
 Use Polish terms (cech, zadanie, stopień, Mistrz) consistently in code and UI. Refer to [PRODUCT_VISION.md](.cursor/PRODUCT_VISION.md) and [TECHNICAL_SPEC.md](.cursor/TECHNICAL_SPEC.md) when in doubt.

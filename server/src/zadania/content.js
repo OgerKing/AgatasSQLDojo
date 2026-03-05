@@ -11,6 +11,7 @@ export const ZADANIA = [
     goal: "Pokaż wszystkie wydarzenia z tabeli wydarzenia (użyj SELECT).",
     concept: "SELECT",
     stopien: "uczen",
+    reference: "https://www.sqlite.org/lang_select.html",
     schema_ddl: `CREATE TABLE wydarzenia (
   id INTEGER PRIMARY KEY,
   nazwa TEXT NOT NULL,
@@ -35,6 +36,7 @@ export const ZADANIA = [
     goal: "Pokaż tylko wydarzenia, których miejsce to 'Rynek' (użyj WHERE).",
     concept: "WHERE",
     stopien: "uczen",
+    reference: "https://www.sqlite.org/lang_expr.html",
     schema_ddl: `CREATE TABLE wydarzenia (
   id INTEGER PRIMARY KEY,
   nazwa TEXT NOT NULL,
@@ -57,6 +59,7 @@ export const ZADANIA = [
     goal: "Pokaż wszystkie wydarzenia posortowane po dacie rosnąco (najbliższe pierwsze). Użyj ORDER BY.",
     concept: "ORDER BY",
     stopien: "uczen",
+    reference: "https://www.sqlite.org/lang_select.html",
     schema_ddl: `CREATE TABLE wydarzenia (
   id INTEGER PRIMARY KEY,
   nazwa TEXT NOT NULL,
@@ -89,6 +92,7 @@ export function listZadania(completedIds = []) {
     title: z.title,
     goal: z.goal,
     stopien: z.stopien,
+    reference: z.reference ?? null,
     completed: completedIds.includes(z.id),
     unlocked: i === 0 || completedIds.includes(ids[i - 1]),
   }));
