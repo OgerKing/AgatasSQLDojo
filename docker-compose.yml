@@ -1,0 +1,31 @@
+# Postgres and Node API each run in their own container.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cech-postgres
+    environment:
+      POSTGRES_USER: cech
+      POSTGRES_PASSWORD: cech
+      POSTGRES_DB: cech
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: agatas-sql-dojo-server
+    container_name: cech-node-api
+    environment:
+      DATABASE_URL: postgres://cech:cech@postgres:5432/cech
+      PORT: 3001
+      RUN_MIGRATIONS: "1"
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data: {}
